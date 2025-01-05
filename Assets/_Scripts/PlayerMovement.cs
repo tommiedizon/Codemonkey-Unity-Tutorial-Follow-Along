@@ -132,7 +132,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParent
         return Vector3.zero;
     }   
 
-    private void SetSelectedCounter(BaseCounter baseCounter)
+    private void SetSelectedCounter(BaseCounter selectedCounter)
     {
         this.selectedCounter = selectedCounter;
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterchangedEventArgs
