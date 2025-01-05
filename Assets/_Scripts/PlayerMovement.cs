@@ -134,7 +134,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParent
 
     private void SetSelectedCounter(BaseCounter selectedCounter)
     {
-        this.selectedCounter = baseCounter;
+        this.selectedCounter = selectedCounter;
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterchangedEventArgs
         {
             selectedCounter = selectedCounter
