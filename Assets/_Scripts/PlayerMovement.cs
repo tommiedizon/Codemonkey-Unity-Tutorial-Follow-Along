@@ -39,6 +39,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParent
     {
         // always listen on start() and not awake()
         gameInput.OnInteractAction += GameInput_OnInteractAction;
+        gameInput.OnInteractAltAction += GameInput_OnInteractAltAction;
     }
 
     private void GameInput_OnInteractAction(object sender, EventArgs e)
@@ -46,6 +47,14 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParent
         if(selectedCounter != null)
         {
             selectedCounter.Interact(this);
+        }
+    }
+
+    private void GameInput_OnInteractAltAction(object sender, EventArgs e)
+    {
+        if (selectedCounter != null)
+        {
+            selectedCounter.InteractAlt(this);
         }
     }
 
