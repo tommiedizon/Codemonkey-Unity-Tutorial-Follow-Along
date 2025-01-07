@@ -15,3 +15,4 @@ MonoBehaviour:
   prefab: {fileID: 8269277524088928350, guid: 779d5a2f319f50b4faeaeb45b0d8f7c6, type: 3}
   sprite: {fileID: 21300000, guid: 91e8fe3de9249fc44b7bdd8050062896, type: 3}
   objectName: Tomato
+  maxCuttingProgress: 3
