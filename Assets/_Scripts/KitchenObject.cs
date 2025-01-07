@@ -8,13 +8,6 @@ public class KitchenObject : MonoBehaviour
     [SerializeField] private IKitchenObjectParent kitchenObjectParent;
     private int cuttingProgress = 0;
 
-    public event EventHandler<OnProgressChangedEventArgs> OnProgressChanged;
-    public class OnProgressChangedEventArgs : EventArgs
-    {
-        public float currentCuttingProgress;
-        public KitchenObjectSO currentKitchenObjectSO;
-    }
-
     public IKitchenObjectParent GetKitchenObjectParent()
     {
         return kitchenObjectParent;
@@ -78,8 +71,5 @@ public class KitchenObject : MonoBehaviour
     public void IncrementCuttingProgress()
     {
         cuttingProgress += 1;
-        OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs { 
-            currentCuttingProgress = cuttingProgress, currentKitchenObjectSO = kitchenObjectSO
-        });
     }
 }

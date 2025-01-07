@@ -9,11 +9,25 @@ public class ProgressBarUI : MonoBehaviour
     private void Start()
     {
         barImage.fillAmount = 0f;
-        cuttingCounter.GetKitchenObject().OnProgressChanged += ProgressBarUI_OnProgressChanged;
+        cuttingCounter.OnProgressChanged += CuttingCounter_OnProgressChanged;
     }
 
-    private void ProgressBarUI_OnProgressChanged(object sender, KitchenObject.OnProgressChangedEventArgs e)
+    private void CuttingCounter_OnProgressChanged(object sender, CuttingCounter.OnProgressChangedEventArgs e)
     {
-        barImage.fillAmount = (float)e.currentCuttingProgress/e.currentKitchenObjectSO.maxCuttingProgress;
+        barImage.fillAmount = e.currentProgressNormalized;
+    }
+
+    public void Show()
+    {
+        gameObject.SetActive(true);
+        float normalizedProgress = (float)cuttingCounter.GetKitchenObject().GetCuttingProgress() / cuttingCounter.GetKitchenObject().GetMaxCuttingProgress();
+        Debug.Log(normalizedProgress);
+        barImage.fillAmount = normalizedProgress;
+
+    }
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
     }
 }

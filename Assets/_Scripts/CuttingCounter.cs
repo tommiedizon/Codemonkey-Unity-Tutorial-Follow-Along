@@ -1,9 +1,20 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using System;
 
 public class CuttingCounter : BaseCounter
 {
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeSOArray;
+    [SerializeField] private ProgressBarUI progressBarUI;
+
+    public event EventHandler<OnProgressChangedEventArgs> OnProgressChanged;
+
+    public class OnProgressChangedEventArgs : EventArgs
+    {
+        public float currentProgressNormalized;
+
+    }
+
     public override void Interact(PlayerMovement player)
     {
 
@@ -15,6 +26,9 @@ public class CuttingCounter : BaseCounter
             {
                 // Player is holding a VALID kitchen object
                 player.GetKitchenObject().SetKitchenObjectParent(this);
+
+                // Enable the progress bar UI
+                progressBarUI.Show();
             }
 
         }
@@ -24,6 +38,10 @@ public class CuttingCounter : BaseCounter
             if (!player.HasKitchenObject())
             {
                 this.GetKitchenObject().SetKitchenObjectParent(player);
+
+                //Disable the progress bar UI
+                progressBarUI.Hide();
+                
             }
         }
     }
@@ -38,11 +56,21 @@ public class CuttingCounter : BaseCounter
             if (currentProgress < maxProgress) // Cutting is not finished yet
             {
                 GetKitchenObject().IncrementCuttingProgress();
+
+                // update the UI
+                OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs {
+                    currentProgressNormalized = (float)currentProgress / (float)maxProgress
+                });
+
             } else // cutting is finished
             {
                 KitchenObjectSO newKitchenObjectSO = GetKitchenObjectFromRecipe(GetKitchenObject());
                 GetKitchenObject().DestroySelf();
                 KitchenObject.SpawnKitchenObject(newKitchenObjectSO, this);
+
+                //update the UI
+
+
             }
 
         }
