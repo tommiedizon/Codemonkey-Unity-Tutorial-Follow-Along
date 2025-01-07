@@ -1,17 +1,19 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class CuttingCounter : BaseCounter
 {
-
-    [SerializeField] private KitchenObjectSO cutKitchenObjectSO;
+    [SerializeField] private CuttingRecipeSO[] cuttingRecipeSOArray;
     public override void Interact(PlayerMovement player)
     {
-        if (!hasKitchenObject())
+
+        // Logic for picking up and dropping things
+        if (!HasKitchenObject())
         {
-            // Counter is, indeed, clear.
-            if (player.hasKitchenObject())
+            // Counter is clear 
+            if (player.HasKitchenObject() && HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO()))
             {
-                // Player is holding a kitchen object
+                // Player is holding a VALID kitchen object
                 player.GetKitchenObject().SetKitchenObjectParent(this);
             }
 
@@ -19,7 +21,7 @@ public class CuttingCounter : BaseCounter
         else
         {
             // There is a KitchenObject on the counter
-            if (!player.hasKitchenObject())
+            if (!player.HasKitchenObject())
             {
                 this.GetKitchenObject().SetKitchenObjectParent(player);
             }
@@ -28,11 +30,53 @@ public class CuttingCounter : BaseCounter
 
     public override void InteractAlt(PlayerMovement player)
     {
-        if (hasKitchenObject())
+        if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO()))
         {
-            // There is a Kitchen Object here, cut it!
-            GetKitchenObject().DestroySelf();
-            KitchenObject.SpawnKitchenObject(cutKitchenObjectSO, this);
+            int currentProgress = GetKitchenObject().GetCuttingProgress();
+            int maxProgress = GetKitchenObject().GetMaxCuttingProgress();
+
+            if (currentProgress < maxProgress) // Cutting is not finished yet
+            {
+                GetKitchenObject().IncrementCuttingProgress();
+            } else // cutting is finished
+            {
+                KitchenObjectSO newKitchenObjectSO = GetKitchenObjectFromRecipe(GetKitchenObject());
+                GetKitchenObject().DestroySelf();
+                KitchenObject.SpawnKitchenObject(newKitchenObjectSO, this);
+            }
+
         }
+    }
+
+    private KitchenObjectSO GetKitchenObjectFromRecipe(KitchenObject kitchenObject)
+    {
+
+        KitchenObjectSO kitchenObjectSO = kitchenObject.GetKitchenObjectSO(); 
+
+        for (int i = 0; i < cuttingRecipeSOArray.Length; i++)
+        {
+            KitchenObjectSO targetKitchenObjectSO = cuttingRecipeSOArray[i].GetKitchenObjectSOInput();
+            if (targetKitchenObjectSO == kitchenObjectSO)
+            {
+                return cuttingRecipeSOArray[i].GetKitchenObjectSOIOutput();
+            }
+        }
+
+        // Recipe not found
+        Debug.Log("Recipe not found.");
+        return null;
+    }
+
+    private bool HasRecipeWithInput(KitchenObjectSO inputKitchenObjectSO)
+    {
+        foreach (CuttingRecipeSO cuttingRecipeSO in cuttingRecipeSOArray)
+        {
+            if(cuttingRecipeSO.GetKitchenObjectSOInput() == inputKitchenObjectSO)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

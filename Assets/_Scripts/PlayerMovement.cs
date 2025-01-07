@@ -167,7 +167,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParent
         kitchenObject = null;
     }
 
-    public bool hasKitchenObject()
+    public bool HasKitchenObject()
     {
         return kitchenObject != null;
     }

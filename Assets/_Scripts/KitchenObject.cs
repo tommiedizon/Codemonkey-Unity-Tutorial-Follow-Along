@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
@@ -5,6 +6,14 @@ public class KitchenObject : MonoBehaviour
 {
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
     [SerializeField] private IKitchenObjectParent kitchenObjectParent;
+    private int cuttingProgress = 0;
+
+    public event EventHandler<OnProgressChangedEventArgs> OnProgressChanged;
+    public class OnProgressChangedEventArgs : EventArgs
+    {
+        public float currentCuttingProgress;
+        public KitchenObjectSO currentKitchenObjectSO;
+    }
 
     public IKitchenObjectParent GetKitchenObjectParent()
     {
@@ -15,7 +24,7 @@ public class KitchenObject : MonoBehaviour
     {
 
         // check if new parent has kitchenobject
-        if (kitchenObjectParent.hasKitchenObject())
+        if (kitchenObjectParent.HasKitchenObject())
         {
             Debug.LogError("KitchenObjectParent already has a KitchenObject");
         }
@@ -54,5 +63,23 @@ public class KitchenObject : MonoBehaviour
         kitchenObject.SetKitchenObjectParent(kitchenObjectParent);
 
         return kitchenObject;
+    }
+
+    public int GetCuttingProgress()
+    {
+        return cuttingProgress;
+    }
+   
+    public int GetMaxCuttingProgress()
+    {
+        return GetKitchenObjectSO().maxCuttingProgress;
+    }
+    
+    public void IncrementCuttingProgress()
+    {
+        cuttingProgress += 1;
+        OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs { 
+            currentCuttingProgress = cuttingProgress, currentKitchenObjectSO = kitchenObjectSO
+        });
     }
 }

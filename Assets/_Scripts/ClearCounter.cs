@@ -9,10 +9,10 @@ public class ClearCounter : BaseCounter
 
     public override void Interact(PlayerMovement player)
     {
-        if (!hasKitchenObject())
+        if (!HasKitchenObject())
         {
             // Counter is, indeed, clear.
-            if (player.hasKitchenObject())
+            if (player.HasKitchenObject())
             {
                 // Player is holding a kitchen object
                 player.GetKitchenObject().SetKitchenObjectParent(this);
@@ -21,7 +21,7 @@ public class ClearCounter : BaseCounter
         } else
         {
             // There is a KitchenObject on the counter
-            if (!player.hasKitchenObject())
+            if (!player.HasKitchenObject())
             {
                 this.GetKitchenObject().SetKitchenObjectParent(player);
             }
