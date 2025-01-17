@@ -21,7 +21,6 @@ public class ProgressBarUI : MonoBehaviour
     {
         gameObject.SetActive(true);
         float normalizedProgress = (float)cuttingCounter.GetKitchenObject().GetCuttingProgress() / cuttingCounter.GetKitchenObject().GetMaxCuttingProgress();
-        Debug.Log(normalizedProgress);
         barImage.fillAmount = normalizedProgress;
 
     }
