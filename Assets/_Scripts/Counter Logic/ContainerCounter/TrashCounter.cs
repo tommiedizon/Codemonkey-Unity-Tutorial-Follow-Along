@@ -1,16 +1,11 @@
 using UnityEngine;
 
-public class TrashCounter : MonoBehaviour
-{
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
+public class TrashCounter : BaseCounter {
+
+    public override void Interact(PlayerMovement player) {
+        if (player.HasKitchenObject()) {
+            player.GetKitchenObject().DestroySelf();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
