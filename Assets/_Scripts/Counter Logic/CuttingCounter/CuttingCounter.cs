@@ -8,6 +8,7 @@ public class CuttingCounter : BaseCounter
     [SerializeField] private ProgressBarUI progressBarUI;
 
     public event EventHandler<OnProgressChangedEventArgs> OnProgressChanged;
+    public event EventHandler OnCut;
 
     public class OnProgressChangedEventArgs : EventArgs
     {
@@ -50,13 +51,14 @@ public class CuttingCounter : BaseCounter
     {
         if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO()))
         {
+            GetKitchenObject().IncrementCuttingProgress();
+            OnCut?.Invoke(this, EventArgs.Empty);
+
             int currentProgress = GetKitchenObject().GetCuttingProgress();
             int maxProgress = GetKitchenObject().GetMaxCuttingProgress();
 
             if (currentProgress < maxProgress) // Cutting is not finished yet
             {
-                GetKitchenObject().IncrementCuttingProgress();
-
                 // update the UI
                 OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs {
                     currentProgressNormalized = (float)currentProgress / (float)maxProgress
@@ -64,19 +66,22 @@ public class CuttingCounter : BaseCounter
 
             } else // cutting is finished
             {
-                KitchenObjectSO newKitchenObjectSO = GetKitchenObjectFromRecipe(GetKitchenObject());
+                progressBarUI.Hide();
+                KitchenObjectSO newKitchenObjectSO = GetKitchenObjectSOFromRecipe(GetKitchenObject());
                 GetKitchenObject().DestroySelf();
                 KitchenObject.SpawnKitchenObject(newKitchenObjectSO, this);
 
                 //update the UI
-
+                OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs {
+                    currentProgressNormalized = 1
+                });
 
             }
 
         }
     }
 
-    private KitchenObjectSO GetKitchenObjectFromRecipe(KitchenObject kitchenObject)
+    private KitchenObjectSO GetKitchenObjectSOFromRecipe(KitchenObject kitchenObject)
     {
 
         KitchenObjectSO kitchenObjectSO = kitchenObject.GetKitchenObjectSO(); 
@@ -86,6 +91,7 @@ public class CuttingCounter : BaseCounter
             KitchenObjectSO targetKitchenObjectSO = cuttingRecipeSOArray[i].GetKitchenObjectSOInput();
             if (targetKitchenObjectSO == kitchenObjectSO)
             {
+                Debug.Log(targetKitchenObjectSO);
                 return cuttingRecipeSOArray[i].GetKitchenObjectSOIOutput();
             }
         }

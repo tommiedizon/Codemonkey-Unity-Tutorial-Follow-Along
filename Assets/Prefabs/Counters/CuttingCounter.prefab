@@ -504,8 +504,29 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4589716710238282922, guid: d72bee846803d074784ffb8f64e993ca, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2950290581549780267}
   m_SourcePrefab: {fileID: 100100000, guid: d72bee846803d074784ffb8f64e993ca, type: 3}
+--- !u!1 &1770900761733494066 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4589716710238282922, guid: d72bee846803d074784ffb8f64e993ca, type: 3}
+  m_PrefabInstance: {fileID: 2819943704997564824}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2950290581549780267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1770900761733494066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cded50dfbce87f45a685a5a104d1ee4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cuttingCounter: {fileID: 3232105084587057735}
 --- !u!4 &1770900761733494067 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4589716710238282923, guid: d72bee846803d074784ffb8f64e993ca, type: 3}
@@ -602,7 +623,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topOfCounter: {fileID: 3690733526923727467}
-  cuttingRecipeSOArray: []
+  cuttingRecipeSOArray:
+  - {fileID: 11400000, guid: d0c63392e258c3a4d8a2ccda8010b6b3, type: 2}
+  - {fileID: 11400000, guid: 271be73484987384d982a2bb55a9cfff, type: 2}
+  - {fileID: 11400000, guid: d7777d1dce7ee014aab670d05f9adca6, type: 2}
   progressBarUI: {fileID: 6117574694780816749}
 --- !u!4 &3234000655523443931 stripped
 Transform:

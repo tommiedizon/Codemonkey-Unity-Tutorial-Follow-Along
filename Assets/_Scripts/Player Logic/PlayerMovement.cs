@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParent
     private Vector3 lastMovementDirection;
     private BaseCounter selectedCounter;
     private KitchenObject kitchenObject;
-    
+    private bool isWalking;
 
 
     private void Awake()
@@ -85,13 +85,9 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParent
         {
             if(hitInfo.transform.TryGetComponent(out BaseCounter baseCounter))
             {
-                // Has ClearCounter
-                // TryGetComponent is a getter w/ in built null check
-                // tests if it is of type ClearCounter
 
                 if (baseCounter != selectedCounter)
                     SetSelectedCounter(baseCounter);
-                
             } else
             {
                 SetSelectedCounter(null);
@@ -107,39 +103,43 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParent
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
 
-        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * 2f, 0.7f, moveDir, Time.deltaTime * speed);
+        isWalking = (moveDir != Vector3.zero);
 
+        float moveDistance = Time.deltaTime * speed;
+        float playerHeight = 2f;
+        float playerRadius = 0.7f;
+        Vector3 playerHead = transform.position + Vector3.up * playerHeight;
+        Vector3 playerPosition = transform.position;
+
+        bool canMove = !Physics.CapsuleCast(playerPosition, playerHead, playerRadius, moveDir, moveDistance);
+
+        if (!canMove) {
+            // Cannot move towards moveDir 
+
+            //Can't move in moveDir, try x movement
+            Vector3 moveDirX = new Vector3(moveDir.x, 0f, 0f).normalized;
+            canMove = !Physics.CapsuleCast(playerPosition, playerHead, playerRadius, moveDirX, moveDistance);
+
+            if(canMove) {
+                moveDir = moveDirX;
+            } else {
+                // Can't move in x or moveDir, Try z movement
+                Vector3 moveDirZ = new Vector3(0f, 0f, moveDir.z).normalized;
+                canMove = !Physics.CapsuleCast(playerPosition, playerHead, playerRadius, moveDirZ, moveDistance);
+
+                if(canMove) {
+                    moveDir = moveDirZ;
+                } else {
+                    //can't move at all
+                }
+            }
+
+        }   
         if (canMove)
-            transform.position += moveDir * Time.deltaTime * speed;
-        //else
-        //    transform.position += SplitMovement(moveDir, speed) * Time.deltaTime * speed;
+            transform.position += moveDir * moveDistance;
 
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
-        // How does Lerp and Slerp work?
     }
-
-    private Vector3 SplitMovement(Vector3 moveDir, float speed)
-    {
-        Vector3 moveDirX = new Vector3(moveDir.x, 0f, 0f).normalized;
-        Vector3 moveDirY = new Vector3(0f, 0f, moveDir.y).normalized;
-
-        Debug.Log("X"+moveDirX+",Y:"+moveDirY);
-
-        bool canMoveX = !Physics.Raycast(transform.position, moveDirX, Time.deltaTime*speed);
-        bool canMoveY = Physics.Raycast(transform.position, moveDirY, Time.deltaTime*speed);
-
-        if (canMoveX)
-        {
-            Debug.Log("Success");
-
-            return moveDirX;
-        }
-
-        if (canMoveY)
-            return moveDirY;
-
-        return Vector3.zero;
-    }   
 
     private void SetSelectedCounter(BaseCounter selectedCounter)
     {
@@ -170,6 +170,10 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParent
     public bool HasKitchenObject()
     {
         return kitchenObject != null;
+    }
+
+    public bool IsWalking() {
+        return isWalking;
     }
 }
 
