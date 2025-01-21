@@ -91,7 +91,6 @@ public class StoveCounter : BaseCounter
                     }
                     break;
                 case CookedState.Burnt:
-                    Debug.Log("Burnt");
                     stoveCounterProgressBarUI.Hide();
                     break;
             }
