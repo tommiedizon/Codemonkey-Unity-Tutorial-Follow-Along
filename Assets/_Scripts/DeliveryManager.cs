@@ -1,9 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class DeliveryManager : MonoBehaviour {
 
     public static DeliveryManager Instance { get; private set; }
+
+    public event EventHandler OnRecipeSpawned;
+    public event EventHandler OnRecipeCompleted;
 
     [SerializeField] private RecipeListSO recipeListSO;
     private List<RecipeSO> waitingRecipeSOList;
@@ -22,9 +26,10 @@ public class DeliveryManager : MonoBehaviour {
         if(spawnRecipeTimer <= 0f) {
             spawnRecipeTimer = spawnRecipeTimerMax;
             if (waitingRecipeSOList.Count < waitingRecipesMax) {
-                RecipeSO recipeSO = recipeListSO.recipeSOList[Random.Range(0, recipeListSO.recipeSOList.Count)];
+                RecipeSO recipeSO = recipeListSO.recipeSOList[UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count)];
                 waitingRecipeSOList.Add(recipeSO);
-                Debug.Log(recipeSO.recipeName);
+
+                OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -46,6 +51,7 @@ public class DeliveryManager : MonoBehaviour {
                         if(plateKitchenObjectSO == recipeKitchenObjectSO) {
                             // Ingredients match
                             ingredientFound = true;
+                            OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
                             break;
                         }
                     }
@@ -59,7 +65,6 @@ public class DeliveryManager : MonoBehaviour {
 
                 if (plateContentMatchesRecipe) {
                     // Player delivered the correct recipe
-                    Debug.Log("Player delivered the correct recipe!");
                     waitingRecipeSOList.RemoveAt(i);
                     return;
                 }
@@ -70,4 +75,6 @@ public class DeliveryManager : MonoBehaviour {
         Debug.Log("Player did not deliver the correct recipe.");
 
     }
+
+    public List<RecipeSO> GetWaitingRecipeSOList() { return waitingRecipeSOList; }
 }
