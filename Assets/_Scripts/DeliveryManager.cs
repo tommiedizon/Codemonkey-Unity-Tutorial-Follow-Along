@@ -51,7 +51,6 @@ public class DeliveryManager : MonoBehaviour {
                         if(plateKitchenObjectSO == recipeKitchenObjectSO) {
                             // Ingredients match
                             ingredientFound = true;
-                            OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
                             break;
                         }
                     }
@@ -66,6 +65,7 @@ public class DeliveryManager : MonoBehaviour {
                 if (plateContentMatchesRecipe) {
                     // Player delivered the correct recipe
                     waitingRecipeSOList.RemoveAt(i);
+                    OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
                     return;
                 }
             }
