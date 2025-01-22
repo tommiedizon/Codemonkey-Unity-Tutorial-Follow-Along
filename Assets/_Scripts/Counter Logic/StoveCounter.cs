@@ -39,7 +39,7 @@ public class StoveCounter : BaseCounter
 
     private CookedState cookedState;
 
-    private float fryingTimer;
+    private float fryingTimer = 0f;
 
     private void Start() {
         cookedState = CookedState.Idle;
@@ -76,7 +76,6 @@ public class StoveCounter : BaseCounter
                         // Fried
                         GetKitchenObject().DestroySelf();
                         KitchenObject.SpawnKitchenObject(fryingRecipeSO.GetFryingObjectSOIOutput(), this);
-                        fryingTimer = 0f;
                         UpdateState(CookedState.Fried);
                     }                             
                     break;
@@ -104,9 +103,12 @@ public class StoveCounter : BaseCounter
         if (!HasKitchenObject()) {
             // Counter is clear 
             if (player.HasKitchenObject() && HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())) {
+                
                 // Player is holding a VALID kitchen object
                 player.GetKitchenObject().SetKitchenObjectParent(this);
+                fryingRecipeSO = GetFryingRecipeSOFromKitchenObject(GetKitchenObject());
                 UpdateState(CookedState.Frying);
+                UpdateProgressBarUI();
             }
 
         } else {

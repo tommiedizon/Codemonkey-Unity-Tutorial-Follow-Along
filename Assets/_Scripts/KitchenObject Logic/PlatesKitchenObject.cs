@@ -1,9 +1,15 @@
 using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class PlatesKitchenObject : KitchenObject
 {
+    public class OnIngredientAddedEventArgs : EventArgs {
+        public KitchenObjectSO kitchenObjectSO;
+    }
+
+    public event EventHandler<OnIngredientAddedEventArgs> OnIngredientAdded;
 
     private List<KitchenObjectSO> kitchenObjectSOList;
 
@@ -23,6 +29,10 @@ public class PlatesKitchenObject : KitchenObject
             // already has this kitchenObject
             return false;
         }
+
+        OnIngredientAdded?.Invoke(this, new OnIngredientAddedEventArgs {
+            kitchenObjectSO = kitchenObjectSO
+        });
 
         kitchenObjectSOList.Add(kitchenObjectSO);
         return true;
