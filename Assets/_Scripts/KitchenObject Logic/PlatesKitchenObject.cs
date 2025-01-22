@@ -30,11 +30,13 @@ public class PlatesKitchenObject : KitchenObject
             return false;
         }
 
+
+        kitchenObjectSOList.Add(kitchenObjectSO);
+
         OnIngredientAdded?.Invoke(this, new OnIngredientAddedEventArgs {
             kitchenObjectSO = kitchenObjectSO
         });
 
-        kitchenObjectSOList.Add(kitchenObjectSO);
         return true;
     }
 
