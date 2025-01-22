@@ -72,4 +72,14 @@ public class KitchenObject : MonoBehaviour
     {
         cuttingProgress += 1;
     }
+
+    public bool TryGetPlate(out PlatesKitchenObject plateKitchenObject) {
+        if (this is PlatesKitchenObject) {
+            plateKitchenObject = this as PlatesKitchenObject;
+            return true;
+        } else {
+            plateKitchenObject = null;
+            return false;
+        }
+    }
 }

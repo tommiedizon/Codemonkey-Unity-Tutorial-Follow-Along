@@ -54,6 +54,7 @@ public class StoveCounter : BaseCounter
 
     private void UpdateState(CookedState cookedState) {
         this.cookedState = cookedState;
+        fryingTimer = 0f;
         OnStateChanged?.Invoke(this, new OnStateChangedEventArgs {
             cookedState = cookedState
         });
@@ -113,8 +114,20 @@ public class StoveCounter : BaseCounter
             if (!player.HasKitchenObject()) {
                 this.GetKitchenObject().SetKitchenObjectParent(player);
                 UpdateState(CookedState.Idle);
+                UpdateProgressBarUI();
                 stoveCounterProgressBarUI.Hide();
 
+            } else {
+                // Player has a kitchenObject and StoveCounter has a KitchenObject
+                if(player.GetKitchenObject().TryGetPlate(out PlatesKitchenObject plateKitchenObject)) {
+
+                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO())) {
+                        UpdateState(CookedState.Idle);
+                        UpdateProgressBarUI();
+                        GetKitchenObject().DestroySelf();
+                        stoveCounterProgressBarUI.Hide();
+                    }
+                }
             }
         }
     }
