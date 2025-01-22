@@ -91,7 +91,6 @@ public class CuttingCounter : BaseCounter
             KitchenObjectSO targetKitchenObjectSO = cuttingRecipeSOArray[i].GetKitchenObjectSOInput();
             if (targetKitchenObjectSO == kitchenObjectSO)
             {
-                Debug.Log(targetKitchenObjectSO);
                 return cuttingRecipeSOArray[i].GetKitchenObjectSOIOutput();
             }
         }

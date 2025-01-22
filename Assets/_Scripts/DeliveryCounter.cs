@@ -8,6 +8,7 @@ public class DeliveryCounter : BaseCounter {
 
             if (player.GetKitchenObject().TryGetPlate(out PlatesKitchenObject plateKitchenObject)) {
                 // only accept plates
+                DeliveryManager.Instance.DeliverRecipe(plateKitchenObject);
                 player.GetKitchenObject().DestroySelf();
             }
 
