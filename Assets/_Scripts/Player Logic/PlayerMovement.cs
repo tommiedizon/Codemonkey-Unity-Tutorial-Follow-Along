@@ -45,7 +45,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParent
 
     private void GameInput_OnInteractAction(object sender, EventArgs e)
     {
-        if (!GameManager.Instance.isGamePlaying()) {
+        if (!GameManager.Instance.IsGamePlaying()) {
             return;
         }
 
@@ -57,7 +57,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParent
 
     private void GameInput_OnInteractAltAction(object sender, EventArgs e)
     {
-        if (!GameManager.Instance.isGamePlaying()) {
+        if (!GameManager.Instance.IsGamePlaying()) {
             return;
         }
 
