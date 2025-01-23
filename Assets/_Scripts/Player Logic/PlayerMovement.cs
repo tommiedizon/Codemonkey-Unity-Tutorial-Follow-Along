@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParent
 
     public static PlayerMovement Instance { get; private set; } //only for singleton pattern
 
+    public static event EventHandler OnPickUp;
     public event EventHandler<OnSelectedCounterchangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterchangedEventArgs : EventArgs
     {
@@ -158,6 +159,10 @@ public class PlayerMovement : MonoBehaviour, IKitchenObjectParent
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
         this.kitchenObject = kitchenObject;
+
+        if (kitchenObject != null) {
+            OnPickUp?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public KitchenObject GetKitchenObject() { return kitchenObject; }

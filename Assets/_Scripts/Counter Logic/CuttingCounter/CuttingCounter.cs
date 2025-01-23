@@ -7,6 +7,8 @@ public class CuttingCounter : BaseCounter
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeSOArray;
     [SerializeField] private ProgressBarUI progressBarUI;
 
+
+    public static event EventHandler OnAnyCut;
     public event EventHandler<OnProgressChangedEventArgs> OnProgressChanged;
     public event EventHandler OnCut;
 
@@ -53,6 +55,7 @@ public class CuttingCounter : BaseCounter
         {
             GetKitchenObject().IncrementCuttingProgress();
             OnCut?.Invoke(this, EventArgs.Empty);
+            OnAnyCut?.Invoke(this, EventArgs.Empty);
 
             int currentProgress = GetKitchenObject().GetCuttingProgress();
             int maxProgress = GetKitchenObject().GetMaxCuttingProgress();
